@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AddrBook</title>
+	<link rel="stylesheet" href="vendor/bootstrap.min.css">
+	<script src="vendor/jquery.min.js"></script>
+	<script src="vendor/bootstrap.min.js"></script>
+	<script src="vendor/angular.min.js"></script>
+	<script src="vendor/angular-translate.min.js"></script>
+</head>
+<body ng-app="addrBook">
+    
+  <div class="container" ng-controller="MainCtrl">
+    <a href="" ng-click="setLang('en')">EN</a>
+    <a href="" ng-click="setLang('ua')">UA</a>
+
+    <button class="btn btn-primary btn-lg" ng-click="prepareContactForm()">
+      {{ 'ADD_CONTACT' | translate }}
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="contact_form" tabindex="-1" role="dialog" aria-labelledby="user_form_label" aria-hidden="true">
+      <div class="modal-dialog">
+        <form action="">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="contact_form_label">{{ getUserFormLabel() | translate }}</h4>
+          </div>
+          <div class="modal-body">
+              <input type="text" ng-model="currCont.data.name" ng-required>
+              <input type="text" ng-model="currCont.data.surname">
+              <input type="text" ng-model="currCont.data.phone">
+              <input type="text" ng-model="currCont.data.group">
+              <input type="hidden" ng-model="currCont.id">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="saveContact()">Save changes</button>
+          </div>
+        </div>
+        </form>
+      </div>
+    </div>
+
+
+    <h1>{{ 'CONTACTS' | translate }}</h1>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>{{'NAME' | translate }}</th>
+          <th>{{'SURNAME' | translate }}</th>
+          <th>{{'PHONE' | translate }}</th>
+          <th>{{'GROUP' | translate }}</th>
+          <th><!-- --></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="c in contacts">
+          <td>{{$index + 1}}</td>
+          <td>{{ c.data.name }}</td>
+          <td>{{ c.data.surname }}</td>
+          <td>{{ c.data.phone }}</td>
+          <td>{{ c.data.group }}</td>
+          <td> <a href="" ng-click="prepareContactForm(c.id)">{{'EDIT' | translate }}</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+	<script src="js/app.js"></script>
+</body>
+</html>
