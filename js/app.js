@@ -89,12 +89,16 @@ addrBook.config(['$translateProvider',function($translateProvider) {
       return this;
     },
     load: function(){ //load from storage
-      
-      contacts = [];
+      var locData = localStorage.getItem('addressBookContacts');
+      try{
+        contacts = angular.fromJson(locData) || [];
+      }catch(e){contacts = [];}
+
       return contacts;
     },
     synch:function(contactsList){ // sycnh with storage
       contacts = contactsList;
+      localStorage.setItem('addressBookContacts',angular.toJson(contacts));
     }
   }
 }])
