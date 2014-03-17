@@ -1,0 +1,8 @@
+.custom-panel{
+  overflow:hidden;
+  padding:5px 10px;
+  margin-bottom:10px;
+}
+.lang-act{color:#59FFFF;}
+.contacts-filter-input{width:300px;}
+.change-order{cursor:pointer;}

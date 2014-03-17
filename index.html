@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>AddrBook</title>
-	<link rel="stylesheet" href="vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="vendor/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
 	<script src="vendor/jquery.min.js"></script>
 	<script src="vendor/bootstrap.min.js"></script>
 	<script src="vendor/angular.min.js"></script>
@@ -12,32 +13,39 @@
 <body ng-app="addrBook">
     
   <div class="container" ng-controller="MainCtrl">
-    <a href="" ng-click="setLang('en')">EN</a>
-    <a href="" ng-click="setLang('ua')">UA</a>
+    <div class="bg-primary custom-panel">
+      <a href="" class="pull-right label" ng-click="setLang(lang)"  ng-repeat="lang in langs">
+        <span  ng-class="{'lang-act':isLangActive(lang)}">{{ lang }}</span>
+      </a>
+    </div>
 
-    <button class="btn btn-primary btn-lg" ng-click="prepareContactForm()">
-      {{ 'ADD_CONTACT' | translate }}
-    </button>
 
     <!-- Modal -->
     <div class="modal fade" id="contact_form" tabindex="-1" role="dialog" aria-labelledby="user_form_label" aria-hidden="true">
       <div class="modal-dialog">
-        <form action="">
+        <form ng-submit="saveContact()">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="contact_form_label">{{ getUserFormLabel() | translate }}</h4>
           </div>
           <div class="modal-body">
-              <input type="text" ng-model="currCont.data.name" ng-required>
-              <input type="text" ng-model="currCont.data.surname">
-              <input type="text" ng-model="currCont.data.phone">
-              <input type="text" ng-model="currCont.data.group">
+              <p class="form-error-msg bg-danger text-danger custom-panel" ng-repeat="errMsg in formErrors">
+                <span class="glyphicon glyphicon-warning-sign"></span> {{errMsg | translate}}
+              </p>
+              <label for="name">{{ 'NAME' | translate }} ({{'REQUIRED' | translate | lowercase }}):</label>
+              <input id="name" ng-class="{'form-control':1}" type="text" ng-model="currCont.data.name" ng-required placeholder="{{ 'SAMPLE_NAME' | translate }}">
+              <label for="surname">{{ 'SURNAME' | translate }}:</label>
+              <input id="surname" class="form-control" type="text" ng-model="currCont.data.surname" placeholder="{{ 'SAMPLE_SURNAME' | translate }}">
+              <label for="phone">{{ 'PHONE' | translate }} ({{'REQUIRED' | translate | lowercase}}):</label>
+              <input id="phone" class="form-control" type="text" ng-required ng-model="currCont.data.phone" placeholder="{{ 'SAMPLE_PHONE' | translate }}">
+              <label for="group">{{ 'GROUP' | translate }}:</label>
+              <input id="group" class="form-control" type="text" ng-model="currCont.data.group" placeholder="{{ 'SAMPLE_GROUP' | translate }}">
               <input type="hidden" ng-model="currCont.id">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="saveContact()">Save changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeCF()">{{'CLOSE' | translate}}</button>
+            <button type="submit" class="btn btn-primary">{{ 'SAVE' | translate }}</button>
           </div>
         </div>
         </form>
@@ -45,29 +53,41 @@
     </div>
 
 
-    <h1>{{ 'CONTACTS' | translate }}</h1>
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>{{'NAME' | translate }}</th>
-          <th>{{'SURNAME' | translate }}</th>
-          <th>{{'PHONE' | translate }}</th>
-          <th>{{'GROUP' | translate }}</th>
-          <th><!-- --></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="c in contacts">
-          <td>{{$index + 1}}</td>
-          <td>{{ c.data.name }}</td>
-          <td>{{ c.data.surname }}</td>
-          <td>{{ c.data.phone }}</td>
-          <td>{{ c.data.group }}</td>
-          <td> <a href="" ng-click="prepareContactForm(c.id)">{{'EDIT' | translate }}</a></td>
-        </tr>
-      </tbody>
-    </table>
+    <h1>
+      <button class="pull-right btn btn-success" ng-click="prepareContactForm()">
+        <span class="glyphicon glyphicon-plus"></span> {{ 'ADD_CONTACT' | translate }}
+      </button>
+      {{ 'CONTACTS' | translate }}
+    </h1>
+    <p class="bg-danger text-danger custom-panel" ng-hide="contacts.length">
+      {{ 'CONTACT_LIST_IS_EMPTY' | translate }}
+    </p>
+    <div class="contatcs-list"  ng-show="contacts.length">
+      <input ng-model="contactsFilter" class="form-control contacts-filter-input" placeholder="{{'FILTER_' | translate}}">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{{'NAME' | translate }} </th>
+            <th>{{'SURNAME' | translate }}</th>
+            <th>{{'PHONE' | translate }}</th>
+            <th>{{'GROUP' | translate }} <span ng-class="{'change-order':1,'glyphicon':1,'glyphicon-chevron-down':!ordAsc,'glyphicon-chevron-up':ordAsc}" ng-click="changeOrder()"></span></th>
+            <th><!-- --></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="c in filteredContacts = (contacts | filter:contactsFilter | orderBy:'data.group':ordAsc)">
+            <td>{{$index + 1}}</td>
+            <td>{{ c.data.name }}</td>
+            <td>{{ c.data.surname }}</td>
+            <td>{{ c.data.phone }}</td>
+            <td>{{ c.data.group }}</td>
+            <td> <a href="" ng-click="prepareContactForm(c.id)"><span class="glyphicon glyphicon-edit"></span> {{'EDIT' | translate }}</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>{{ 'TOTAL' | translate }} : ({{filteredContacts.length}}/{{contacts.length}})</p>
+    </div>
   </div>
 	<script src="js/app.js"></script>
 </body>
