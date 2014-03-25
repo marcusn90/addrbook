@@ -1,0 +1,24 @@
+{
+  "name": "addrbook",
+  "version": "0.0.1",
+  "description": "test project, offline address book",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcusn90/addrbook.git"
+  },
+  "keywords": [
+    "offline",
+    "address",
+    "book"
+  ],
+  "author": "nazar marchuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcusn90/addrbook/issues"
+  },
+  "homepage": "https://github.com/marcusn90/addrbook",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-concat": "^0.3.0"
+  }
+}

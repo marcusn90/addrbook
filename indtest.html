@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" ng-app="addrBook">
+<head>
+  <meta charset="UTF-8">
+  <title>Rebuilding Address book</title>
+  <script src="vendor/angular.min.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body ng-controller="MainCtrl as ctrl">
+          <table>
+          <tbody>
+          <tr ng-repeat="c in ctrl.contacts">
+            <td>{{$index + 1}}</td>
+            <td>{{ c.data.name }}</td>
+            <td>{{ c.data.surname }}</td>
+            <td>{{ c.data.phone }}</td>
+            <td>{{ c.data.group }}</td>
+            <td>{{ c.testVal }}</td>
+            <td>{{ c.share }}</td>
+            
+          </tr>
+        </tbody>
+        </table>
+        Test: {{ ctrl.testVal }}
+</body>
+</html>

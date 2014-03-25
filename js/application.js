@@ -1,0 +1,1 @@
+angular.module('addrBook',['app.service','app.ctrl']);
